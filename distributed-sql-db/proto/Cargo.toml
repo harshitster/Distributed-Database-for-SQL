@@ -1,0 +1,8 @@
+[package]
+name = "proto"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+tonic = { version = "0.11", features = ["transport"] }
+prost = "0.12"
