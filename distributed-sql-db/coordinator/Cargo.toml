@@ -1,9 +1,0 @@
-[package]
-name = "coordinator"
-version = "0.1.0"
-edition = "2024"
-
-[dependencies]
-tonic = { version = "0.11", features = ["transport"] }
-tokio = { version = "1", features = ["full"] }
-proto = { path = "../proto" }
