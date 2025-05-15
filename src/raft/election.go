@@ -2,44 +2,11 @@ package raft
 
 import (
 	"context"
-	"sync"
 	"time"
 
 	"github.com/harshitster/Distributed-Database-for-SQL/src/pb"
 	"google.golang.org/grpc"
 )
-
-type State string
-
-const (
-	Follower  State = "Follower"
-	Candidate State = "Candidate"
-	Leader    State = "Leader"
-)
-
-type LogEntry struct {
-	Term    int
-	Command string
-}
-
-type RaftNode struct {
-	mu                 sync.Mutex
-	id                 int
-	peers              map[int]string
-	state              State
-	term               int
-	votedFor           *int
-	log                []LogEntry
-	commitIndex        int
-	lastApplied        int
-	nextIndex          map[int]int
-	matchIndex         map[int]int
-	ackedLength        map[int]int
-	leaderID           *int
-	applyCh            chan string
-	votesReceived      map[int]bool
-	electionResetEvent time.Time
-}
 
 func (r *RaftNode) startElection() {
 	r.mu.Lock()
@@ -87,12 +54,12 @@ func (r *RaftNode) startElection() {
 				return
 			}
 
-			r.handlerVoteResponse(resp)
+			r.handleVoteResponse(resp)
 		}(peerID, addr)
 	}
 }
 
-func (r *RaftNode) handlerVoteResponse(resp *pb.VoteResponse) {
+func (r *RaftNode) handleVoteResponse(resp *pb.VoteResponse) {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
