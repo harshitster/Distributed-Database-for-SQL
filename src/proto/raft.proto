@@ -1,0 +1,45 @@
+syntax = "proto3";
+
+package raft;
+
+option go_package = "github.com/harshitster/Distributed-Database-for-SQL/src/pb;pb";
+
+service Raft {
+    rpc RequestVote(VoteRequest) returns (VoteResponse);
+
+    rpc AppendEntries(LogRequest) returns (LogResponse);
+}
+
+message VoteRequest {
+    int32 nodeId = 1;
+    int32 term = 2;
+    int32 logLength = 3;
+    int32 logTerm = 4;
+}
+
+message VoteResponse {
+    int32 nodeID = 1;
+    int32 term = 2;
+    bool voteGranted = 3;
+}
+
+message LogRequest {
+    int32 leaderID = 1;
+    int32 term = 2;
+    int32 logLength = 3;
+    int32 logTerm = 4;
+    int32 leaderCommit = 5;
+    repeated LogEntry entries = 6;
+}
+
+message LogResponse {
+    int32 followerID = 1;
+    int32 term = 2;
+    int32 ack = 3;
+    bool success = 4;
+}
+
+message LogEntry {
+    int32 term = 1;
+    string command = 2;
+}
